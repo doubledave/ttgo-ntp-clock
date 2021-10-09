@@ -1,35 +1,63 @@
-// See README.md
+// Arduino IDE setup instructions (a little out of date) at
+// https://sites.google.com/site/jmaathuis/arduino/lilygo-ttgo-t-display-esp32#h.p_0m3yqZ8aormc
+// 
+// Arduino IDE set this as one of the boards manager URLs in File > Preferences:
+// https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+// 
+// Then go to Tools > board > boards manager and allow it to update.
+// Tools > board > select ESP32 Arduino > ESP32 Dev Module
+// Set the correct COM port.
+//
+// Installing the needed library for the screen attached to the TTGO ESP32 T-Display:
+// Tools > Library Manager, find "TFT_eSPI" from "Bodmer"
+// Then for it to work right needs an update:
+// Obtain/clone/download the github repository: https://github.com/Xinyuan-LilyGO/TTGO-T-Display
+// Take the entire TFT_eSPI directory of this repository and copy/paste this folder into:
+// C:\Users\[username]\Documents\Arduino\libraries\
+// This folder will already exist because you added it in Library Manager.  Overwrite all existing files/subfolders.
+//
+// Article explaining this: https://lastminuteengineers.com/esp32-ntp-server-date-time-tutorial/
 
 #include <WiFi.h>
 #include "time.h"
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include "esp_adc_cal.h"
+#include "Button2.h"
+
 
 #define TFT_GREY 0x5AEB
 #define ADC_EN              14  //ADC_EN is the ADC detection enable port
 #define ADC_PIN             34
+#define BUTTON_1            35
 
 int vref = 1100;
 float battery_voltage;
+
+// Bring in our button library and give it context. - TJB
+Button2 btn1(BUTTON_1);
 
 TFT_eSPI tft = TFT_eSPI();
 byte fontNum = 2;
   // Only font numbers 2,4,6,7 are valid. Font 6 only contains characters [space] 0 1 2 3 4 5 6 7 8 9 : . - a p m
   // Font 7 is a 7 segment font and only contains characters [space] 0 1 2 3 4 5 6 7 8 9 : .
 
-const char* ssid       = "YOUR_WIFI_SSID";
-const char* password   = "WIFI_PASSWORD";
+const char* ssid       = "****";
+const char* password   = "****";
 // const char* ssid2       = "";
 // const char* apssword2   = "";
 
-// const char* ntpServer = "time.nist.gov";
 // const char* ntpServer = "us.pool.ntp.org";
-const char* ntpServer = "192.168.1.1";        // can user the router's built-in time server if it has one.
+const char* ntpServer = "192.168.1.1";
 const long  gmtOffset_sec = (-6 * 3600);
 const int   daylightOffset_sec = 3600;
 
 String msg = String(0);
+// An accumulator to track how many 
+// cycles the screen has been active for 
+int screen_time = 0;
+
+int btnClck = false;
 
 float voltage()
 {
@@ -63,11 +91,10 @@ void printLocalTime()
   Serial.println(&timeinfo, "%A %B %d %Y %H:%M:%S");
   Serial2.println(&timeinfo, "%A %B %d %Y %H:%M:%S");
 
-  delay(200);
-  digitalWrite(TFT_BL, LOW);
-
-  
-  
+  // delay(200); Slowing things down
+  if (screen_time >= 30) {
+    digitalWrite(TFT_BL, LOW);
+  }
 }
 
 void setup()
@@ -82,6 +109,8 @@ void setup()
     */
   pinMode(ADC_EN, OUTPUT);
   digitalWrite(ADC_EN, HIGH);
+
+  button_init();
 
   tft.init();
   tft.setRotation(1);
@@ -139,9 +168,51 @@ void setup()
   battery_voltage = voltage();  //also display voltage on screen
 }
 
+void button_init(){
+  // Initialize the button on pin35 
+  btn1.setLongClickHandler([](Button2 & b){
+    screen_time = 0;
+  });
+}
+
+void button_loop(){
+  // Check the buttons - TJB
+  btn1.loop();
+}
+
 void loop()
 {
+  // Run the button loop to check
+  // for presses. - TJB
+  button_loop();
   delay(1000);
-  battery_voltage = voltage();  //also display voltage on screen
-  printLocalTime();
+
+  // Check screen status. - TJB
+  int (scrn) = digitalRead(TFT_BL);
+  screen_time = screen_time + 1;
+  button_loop();
+  //Serial.println(screen_time);
+  //Serial.println(scrn);
+  if (screen_time >= 30) {
+    if (scrn == 1 ) {
+      digitalWrite(TFT_BL, LOW);
+    }
+  }
+
+  // Timeout below 30s.
+  // This can also mean that the button 
+  // was pressed which resets the timer. - TJB
+  if (screen_time <= 29) {
+
+    // If the screen is off, and the counter 
+    // is under or at 29, turn on the screen. - TJB
+    if (scrn == 0) {
+      digitalWrite(TFT_BL, HIGH);
+    }
+
+    // Moved calls that write to screen to within loop - TJB
+    battery_voltage = voltage();  //also display voltage on screen
+    printLocalTime();
+    delay(100);
+  }
 }
