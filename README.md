@@ -2,6 +2,14 @@
 
 [Arduino IDE setup instructions](https://sites.google.com/site/jmaathuis/arduino/lilygo-ttgo-t-display-esp32#h.p_0m3yqZ8aormc) (a little out of date)
 
+### For Version with Button
+
+In Arduino IDE:
+  - go to Tools > Manage Libraries
+  - click
+  - click in the searchbox and type 'Button2' and await your search results.
+  - install 'Button2'
+
 In Arduino IDE set this as one of the boards manager URLs in File > Preferences:
 
 `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`
