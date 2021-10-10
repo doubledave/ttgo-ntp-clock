@@ -170,7 +170,7 @@ void setup()
 
 void button_init(){
   // Initialize the button on pin35 
-  btn1.setLongClickHandler([](Button2 & b){
+  btn1.setTapHandler([](Button2 & b){
     screen_time = 0;
   });
 }
@@ -184,11 +184,18 @@ void loop()
 {
   // Run the button loop to check
   // for presses. - TJB
+  
+  delay(200);
   button_loop();
-  delay(1000);
+  delay(200);
 
   // Check screen status. - TJB
   int (scrn) = digitalRead(TFT_BL);
+
+  button_loop();
+
+  delay(200);
+  
   screen_time = screen_time + 1;
   button_loop();
   //Serial.println(screen_time);
@@ -198,6 +205,10 @@ void loop()
       digitalWrite(TFT_BL, LOW);
     }
   }
+
+  button_loop();
+
+  delay(200);
 
   // Timeout below 30s.
   // This can also mean that the button 
@@ -215,4 +226,6 @@ void loop()
     printLocalTime();
     delay(100);
   }
+  button_loop();
+  delay(200);
 }
