@@ -190,11 +190,11 @@ void loop()
   button_loop();
   delay(10);
 
+
   // Check screen status. - TJB
   int (scrn) = digitalRead(TFT_BL);
 
   button_loop();
-
   delay(10);
   
   screen_time = screen_time + 1;
@@ -227,5 +227,6 @@ void loop()
     printLocalTime();
   }
   button_loop();
+  
   delay(10);
 }
