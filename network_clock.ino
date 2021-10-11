@@ -59,6 +59,14 @@ int screen_time = 0;
 
 int btnClck = false;
 
+
+void button_init(){
+  // Initialize the button on pin35 
+  btn1.setTapHandler([](Button2 & b){
+    screen_time = 0;
+  });
+}
+
 float voltage()
 {
   uint16_t v = analogRead(ADC_PIN);
@@ -92,9 +100,9 @@ void printLocalTime()
   Serial2.println(&timeinfo, "%A %B %d %Y %H:%M:%S");
 
   // delay(200); Slowing things down
-  if (screen_time >= 30) {
-    digitalWrite(TFT_BL, LOW);
-  }
+  //if (screen_time >= 30) {
+  //  digitalWrite(TFT_BL, LOW);
+  //}
 }
 
 void setup()
@@ -143,7 +151,7 @@ void setup()
   int retrycount = 0;
   while (WiFi.status() != WL_CONNECTED)
   {
-      delay(500);
+      delay(200);
       Serial.print(".");
       Serial2.print(".");
       battery_voltage = voltage();  //also display voltage on screen
@@ -151,7 +159,7 @@ void setup()
   tft.drawCentreString(" CONNECTED ", tft.width()/2, tft.height()/2-16, 4);
   Serial.println(" CONNECTED");
   Serial2.println(" CONNECTED");
-  delay(500);
+  delay(200);
   battery_voltage = voltage();  //also display voltage on screen
   
   //init and get the time
@@ -168,12 +176,6 @@ void setup()
   battery_voltage = voltage();  //also display voltage on screen
 }
 
-void button_init(){
-  // Initialize the button on pin35 
-  btn1.setTapHandler([](Button2 & b){
-    screen_time = 0;
-  });
-}
 
 void button_loop(){
   // Check the buttons - TJB
@@ -185,22 +187,21 @@ void loop()
   // Run the button loop to check
   // for presses. - TJB
   
-  delay(200);
   button_loop();
-  delay(200);
+  delay(10);
 
   // Check screen status. - TJB
   int (scrn) = digitalRead(TFT_BL);
 
   button_loop();
 
-  delay(200);
+  delay(10);
   
   screen_time = screen_time + 1;
   button_loop();
-  //Serial.println(screen_time);
+  Serial.println(screen_time);
   //Serial.println(scrn);
-  if (screen_time >= 30) {
+  if (screen_time >= 750) {
     if (scrn == 1 ) {
       digitalWrite(TFT_BL, LOW);
     }
@@ -208,12 +209,12 @@ void loop()
 
   button_loop();
 
-  delay(200);
+  delay(10);
 
   // Timeout below 30s.
   // This can also mean that the button 
   // was pressed which resets the timer. - TJB
-  if (screen_time <= 29) {
+  if (screen_time <= 749) {
 
     // If the screen is off, and the counter 
     // is under or at 29, turn on the screen. - TJB
@@ -224,8 +225,7 @@ void loop()
     // Moved calls that write to screen to within loop - TJB
     battery_voltage = voltage();  //also display voltage on screen
     printLocalTime();
-    delay(100);
   }
   button_loop();
-  delay(200);
+  delay(10);
 }
