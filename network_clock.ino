@@ -29,13 +29,19 @@
 #define TFT_GREY 0x5AEB
 #define ADC_EN              14  //ADC_EN is the ADC detection enable port
 #define ADC_PIN             34
-#define BUTTON_1            35
+
+#define BUTTON_1            35  // The button on the same side of the board
+                                // as the 'O' in 'TTGO' on the opposite end.
+
+#define BUTTON_2            0   // The button on the same side of the board
+                                // as the 'T' in 'TTGO' on the opposite end.
 
 int vref = 1100;
 float battery_voltage;
 
 // Bring in our button library and give it context. - TJB
 Button2 btn1(BUTTON_1);
+Button2 btn2(BUTTON_2);
 
 TFT_eSPI tft = TFT_eSPI();
 byte fontNum = 2;
@@ -64,6 +70,11 @@ void button_init(){
   // Initialize the button on pin35 
   btn1.setTapHandler([](Button2 & b){
     screen_time = 0;
+  });
+
+  // Initialize the button on pin0
+  btn2.setTapHandler([] (Button2 & b) {
+    screen_time = 750;
   });
 }
 
@@ -121,7 +132,7 @@ void setup()
   button_init();
 
   tft.init();
-  tft.setRotation(1);
+  tft.setRotation(3);
   tft.fillScreen(TFT_GREY);
   tft.setTextColor(TFT_BLACK, TFT_GREY);
 
@@ -180,6 +191,7 @@ void setup()
 void button_loop(){
   // Check the buttons - TJB
   btn1.loop();
+  btn2.loop();
 }
 
 void loop()
@@ -190,11 +202,11 @@ void loop()
   button_loop();
   delay(10);
 
-
   // Check screen status. - TJB
   int (scrn) = digitalRead(TFT_BL);
 
   button_loop();
+
   delay(10);
   
   screen_time = screen_time + 1;
@@ -227,6 +239,5 @@ void loop()
     printLocalTime();
   }
   button_loop();
-  
   delay(10);
 }
