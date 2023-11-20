@@ -12,7 +12,7 @@ In Arduino IDE:
 
 In Arduino IDE set this as one of the boards manager URLs in File > Preferences:
 
-`https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`
+`https://espressif.github.io/arduino-esp32/package_esp32_index.json`
 
 Then go to Tools > board > boards manager and allow it to update.
 
