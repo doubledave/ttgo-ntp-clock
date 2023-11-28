@@ -58,5 +58,4 @@ Contributions to this project are welcome. Please ensure to follow best practice
 
 ## Acknowledgements
 - Thanks to the creators and contributors of the ESP32 and TFT_eSPI libraries.
-- This project was inspired by [additional sources or inspiration, if any].
 
