@@ -1,61 +1,65 @@
-
-# TTGO ESP32 T-Display Project
+# TTGO ESP32 T-Display Project with UPS
 
 ## Overview
-This repository contains the code for a project using the TTGO ESP32 T-Display. This project includes functionality for displaying the local time, managing WiFi connections, and handling user input through buttons.
+This project leverages the TTGO ESP32 T-Display, an ESP32 development board with an integrated display, and is designed to work with a large UPS (Uninterruptible Power Supply) for enhanced power management and reliability. It features WiFi connectivity, time display, button interaction, and UPS voltage monitoring.
 
 ## Features
-- Display the current local time on the TTGO ESP32 T-Display.
-- Connect to a WiFi network and fetch the current time from an NTP server.
-- Display battery voltage.
-- Screen timeout management with adjustable settings.
-- Button interactions for resetting screen timeout.
+- **WiFi Connectivity**: Connects to a specified WiFi network and prints the connection status.
+- **Time Display**: Displays the current time obtained from an NTP server.
+- **Button Functions**: Utilizes onboard buttons for display interaction.
+- **UPS Voltage Measurement**: Measures and displays the UPS voltage.
+- **Screen Time Management**: Controls the display backlight based on user interaction.
 
 ## Hardware Requirements
-- TTGO ESP32 T-Display module.
-- USB cable for programming and power supply.
+- TTGO ESP32 T-Display board
+- Large UPS (Uninterruptible Power Supply)
+- USB cable for programming
 
 ## Software Requirements
 - Arduino IDE
+- ESP32 board support (installation URL: `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`)
 - Required Libraries:
-  - TFT_eSPI (from Bodmer)
-  - Button2
+  - TFT_eSPI from Bodmer
   - WiFi
   - SPI
-  - time
+  - time.h
+  - esp_adc_cal.h
+  - Button2
 
-## Setup and Installation
+## Installation
 
-### Arduino IDE Configuration
-1. Add the ESP32 board manager URL in Arduino IDE under `File > Preferences`.
+### Setting up Arduino IDE
+1. Add ESP32 board support to the Arduino IDE. In File > Preferences, add the following to 'Additional Board Manager URLs':
    ```
    https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
    ```
-2. Install the ESP32 board from `Tools > Board > Boards Manager`.
-3. Select `ESP32 Dev Module` under `Tools > Board`.
-4. Choose the correct COM port for your device.
+2. Install ESP32 board support via Tools > Board > Boards Manager.
 
-### Library Installation
-1. Install `TFT_eSPI` library using the Library Manager in the Arduino IDE.
-2. Update the `TFT_eSPI` library with the specific version for TTGO ESP32 T-Display from the GitHub repository.
-   ```
-   https://github.com/Xinyuan-LilyGO/TTGO-T-Display
-   ```
-3. Replace the existing `TFT_eSPI` directory in your Arduino libraries folder with the downloaded version.
+### Installing Libraries
+- Open Tools > Library Manager and install:
+  - `TFT_eSPI` by Bodmer
+- Download the repository from `https://github.com/Xinyuan-LilyGO/TTGO-T-Display` and replace the `TFT_eSPI` directory in `Documents/Arduino/libraries/` with the one from the repository.
+
+### Hardware Setup
+- Connect the TTGO ESP32 T-Display to the UPS and to your computer via a USB cable.
+
+### Loading the Sketch
+- Open the provided Arduino sketch in the Arduino IDE.
+- Select `ESP32 Dev Module` under Tools > Board.
+- Select the correct COM port under Tools > Port.
+- Upload the sketch to the board.
 
 ## Usage
-Upload the provided code to your TTGO ESP32 T-Display. Once running, the device will display the current time, connect to WiFi, and update the time via NTP.
+- The device will automatically connect to the specified WiFi network.
+- Time will be displayed on the screen, updated from the NTP server.
+- Button 1 resets the screen time counter, while Button 2 sets it to a specific value.
+- The device measures and displays the voltage of the UPS.
+- The display backlight is managed automatically based on user interaction.
 
 ## Customization
-- WiFi credentials and NTP server settings can be adjusted in the code.
-- Screen timeout duration can be changed by modifying the `SCREEN_TIMEOUT` constant.
+- Update WiFi credentials in the sketch with your network details.
+- Modify NTP server settings as required.
+- Adjust screen time management settings as per your preference.
 
-## Contributing
-Contributions to this project are welcome. Please ensure to follow best practices for coding and documentation.
-
-## License
-[MIT](https://mit-license.org/)
-
-## Acknowledgements
-- Thanks to the creators and contributors of the ESP32 and TFT_eSPI libraries.
-
+> :clipboard: **Note:** <br>
+>     You can find more information on configuration on the [configuration wiki page](https://github.com/doubledave/ttgo-ntp-clock/wiki/Configuration)
