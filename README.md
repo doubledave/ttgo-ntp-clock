@@ -1,37 +1,62 @@
-# ttgo-ntp-clock
 
-[Arduino IDE setup instructions](https://sites.google.com/site/jmaathuis/arduino/lilygo-ttgo-t-display-esp32#h.p_0m3yqZ8aormc) (a little out of date)
+# TTGO ESP32 T-Display Project
 
-### For Version with Button
+## Overview
+This repository contains the code for a project using the TTGO ESP32 T-Display. This project includes functionality for displaying the local time, managing WiFi connections, and handling user input through buttons.
 
-In Arduino IDE:
-  - go to Tools > Manage Libraries
-  - click
-  - click in the searchbox and type 'Button2' and await your search results.
-  - install 'Button2'
+## Features
+- Display the current local time on the TTGO ESP32 T-Display.
+- Connect to a WiFi network and fetch the current time from an NTP server.
+- Display battery voltage.
+- Screen timeout management with adjustable settings.
+- Button interactions for resetting screen timeout.
 
-In Arduino IDE set this as one of the boards manager URLs in File > Preferences:
+## Hardware Requirements
+- TTGO ESP32 T-Display module.
+- USB cable for programming and power supply.
 
-`https://espressif.github.io/arduino-esp32/package_esp32_index.json`
+## Software Requirements
+- Arduino IDE
+- Required Libraries:
+  - TFT_eSPI (from Bodmer)
+  - Button2
+  - WiFi
+  - SPI
+  - time
 
-Then go to Tools > board > boards manager and allow it to update.
+## Setup and Installation
 
-Tools > board > select ESP32 Arduino > ESP32 Dev Module
+### Arduino IDE Configuration
+1. Add the ESP32 board manager URL in Arduino IDE under `File > Preferences`.
+   ```
+   https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+   ```
+2. Install the ESP32 board from `Tools > Board > Boards Manager`.
+3. Select `ESP32 Dev Module` under `Tools > Board`.
+4. Choose the correct COM port for your device.
 
-Installing the needed library for the screen attached to the TTGO ESP32 T-Display:
+### Library Installation
+1. Install `TFT_eSPI` library using the Library Manager in the Arduino IDE.
+2. Update the `TFT_eSPI` library with the specific version for TTGO ESP32 T-Display from the GitHub repository.
+   ```
+   https://github.com/Xinyuan-LilyGO/TTGO-T-Display
+   ```
+3. Replace the existing `TFT_eSPI` directory in your Arduino libraries folder with the downloaded version.
 
-Tools > Library Manager, find "TFT_eSPI" from "Bodmer"
+## Usage
+Upload the provided code to your TTGO ESP32 T-Display. Once running, the device will display the current time, connect to WiFi, and update the time via NTP.
 
-Then for it to work right needs an update:
+## Customization
+- WiFi credentials and NTP server settings can be adjusted in the code.
+- Screen timeout duration can be changed by modifying the `SCREEN_TIMEOUT` constant.
 
-Obtain/clone/download the github repository: https://github.com/Xinyuan-LilyGO/TTGO-T-Display
+## Contributing
+Contributions to this project are welcome. Please ensure to follow best practices for coding and documentation.
 
-Take the entire TFT_eSPI directory of this repository and copy/paste this folder into:
+## License
+[MIT](https://mit-license.org/)
 
-C:\Users\\[username]\Documents\Arduino\libraries\
+## Acknowledgements
+- Thanks to the creators and contributors of the ESP32 and TFT_eSPI libraries.
+- This project was inspired by [additional sources or inspiration, if any].
 
-This folder will already exist because you added it in Library Manager.  Overwrite all existing files/subfolders.
-
-With the TTGO T-Display connected by USB, choose the correct COM port from the Tools > Port menu.  The right port won't exist if you're in Windows and the drivers for the USB to serial interface chip didn't get installed.  You can check for the port/driver by looking in the device manager (start > run > devmgmt.msc) in the ports section and/or listed unknown USB devices.  Running Windows Update with the device connected will result in it finding and giving you the option to automatically install the driver for it.
-
-Article explaining much of this: https://lastminuteengineers.com/esp32-ntp-server-date-time-tutorial/
