@@ -48,15 +48,41 @@ byte fontNum = 2;
   // Only font numbers 2,4,6,7 are valid. Font 6 only contains characters [space] 0 1 2 3 4 5 6 7 8 9 : . - a p m
   // Font 7 is a 7 segment font and only contains characters [space] 0 1 2 3 4 5 6 7 8 9 : .
 
+// ------------------------ WiFi Settings ------------------------
+
 const char* ssid       = "****";
 const char* password   = "****";
 // const char* ssid2       = "";
 // const char* apssword2   = "";
 
+// ------------------------/ WiFi Settings ------------------------
+
+// ------------------------ NTP Settings ------------------------
+
 // const char* ntpServer = "us.pool.ntp.org";
 const char* ntpServer = "192.168.1.1";
 const long  gmtOffset_sec = (-6 * 3600);
 const int   daylightOffset_sec = 3600;
+
+// -----------------------/ NTP Settings ------------------------
+
+
+// ------------------------ Screen Timeout Setting ------------------------
+
+// Set the screen timeout time in seconds.
+// The 'screen_time' variable is incremented once every loop iteration.
+// Since each loop iteration takes approximately 10 milliseconds (due to 'delay(10);'),
+// we calculate the number of iterations needed for the desired timeout duration.
+//
+// Formula:
+//     Number of iterations = (Desired time in seconds) * (1000 ms / second) / (Delay time per iteration in ms)
+//
+// For a 30-second timeout: 30 seconds * (1000 ms / second) / 10 ms = 3000 iterations
+const int SCREEN_TIMEOUT = 750;
+
+// ------------------------/ Screen Timeout Setting ------------------------
+
+// END SETTINGS
 
 String msg = String(0);
 // An accumulator to track how many 
@@ -213,7 +239,7 @@ void loop()
   button_loop();
   Serial.println(screen_time);
   //Serial.println(scrn);
-  if (screen_time >= 750) {
+  if (screen_time >= SCREEN_TIMEOUT) {
     if (scrn == 1 ) {
       digitalWrite(TFT_BL, LOW);
     }
@@ -226,7 +252,7 @@ void loop()
   // Timeout below 30s.
   // This can also mean that the button 
   // was pressed which resets the timer. - TJB
-  if (screen_time <= 749) {
+  if (screen_time <= SCREEN_TIMEOUT - 1) {
 
     // If the screen is off, and the counter 
     // is under or at 29, turn on the screen. - TJB

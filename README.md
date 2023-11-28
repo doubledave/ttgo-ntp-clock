@@ -1,37 +1,65 @@
-# ttgo-ntp-clock
+# TTGO ESP32 T-Display Project with UPS
 
-[Arduino IDE setup instructions](https://sites.google.com/site/jmaathuis/arduino/lilygo-ttgo-t-display-esp32#h.p_0m3yqZ8aormc) (a little out of date)
+## Overview
+This project leverages the TTGO ESP32 T-Display, an ESP32 development board with an integrated display, and is designed to work with a large UPS (Uninterruptible Power Supply) for enhanced power management and reliability. It features WiFi connectivity, time display, button interaction, and UPS voltage monitoring.
 
-### For Version with Button
+## Features
+- **WiFi Connectivity**: Connects to a specified WiFi network and prints the connection status.
+- **Time Display**: Displays the current time obtained from an NTP server.
+- **Button Functions**: Utilizes onboard buttons for display interaction.
+- **UPS Voltage Measurement**: Measures and displays the UPS voltage.
+- **Screen Time Management**: Controls the display backlight based on user interaction.
 
-In Arduino IDE:
-  - go to Tools > Manage Libraries
-  - click
-  - click in the searchbox and type 'Button2' and await your search results.
-  - install 'Button2'
+## Hardware Requirements
+- TTGO ESP32 T-Display board
+- Large UPS (Uninterruptible Power Supply)
+- USB cable for programming
 
-In Arduino IDE set this as one of the boards manager URLs in File > Preferences:
+## Software Requirements
+- Arduino IDE
+- ESP32 board support (installation URL: `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`)
+- Required Libraries:
+  - TFT_eSPI from Bodmer
+  - WiFi
+  - SPI
+  - time.h
+  - esp_adc_cal.h
+  - Button2
 
-`https://espressif.github.io/arduino-esp32/package_esp32_index.json`
+## Installation
 
-Then go to Tools > board > boards manager and allow it to update.
+### Setting up Arduino IDE
+1. Add ESP32 board support to the Arduino IDE. In File > Preferences, add the following to 'Additional Board Manager URLs':
+   ```
+   https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+   ```
+2. Install ESP32 board support via Tools > Board > Boards Manager.
 
-Tools > board > select ESP32 Arduino > ESP32 Dev Module
+### Installing Libraries
+- Open Tools > Library Manager and install:
+  - `TFT_eSPI` by Bodmer
+- Download the repository from `https://github.com/Xinyuan-LilyGO/TTGO-T-Display` and replace the `TFT_eSPI` directory in `Documents/Arduino/libraries/` with the one from the repository.
 
-Installing the needed library for the screen attached to the TTGO ESP32 T-Display:
+### Hardware Setup
+- Connect the TTGO ESP32 T-Display to the UPS and to your computer via a USB cable.
 
-Tools > Library Manager, find "TFT_eSPI" from "Bodmer"
+### Loading the Sketch
+- Open the provided Arduino sketch in the Arduino IDE.
+- Select `ESP32 Dev Module` under Tools > Board.
+- Select the correct COM port under Tools > Port.
+- Upload the sketch to the board.
 
-Then for it to work right needs an update:
+## Usage
+- The device will automatically connect to the specified WiFi network.
+- Time will be displayed on the screen, updated from the NTP server.
+- Button 1 resets the screen time counter, while Button 2 sets it to a specific value.
+- The device measures and displays the voltage of the UPS.
+- The display backlight is managed automatically based on user interaction.
 
-Obtain/clone/download the github repository: https://github.com/Xinyuan-LilyGO/TTGO-T-Display
+## Customization
+- Update WiFi credentials in the sketch with your network details.
+- Modify NTP server settings as required.
+- Adjust screen time management settings as per your preference.
 
-Take the entire TFT_eSPI directory of this repository and copy/paste this folder into:
-
-C:\Users\\[username]\Documents\Arduino\libraries\
-
-This folder will already exist because you added it in Library Manager.  Overwrite all existing files/subfolders.
-
-With the TTGO T-Display connected by USB, choose the correct COM port from the Tools > Port menu.  The right port won't exist if you're in Windows and the drivers for the USB to serial interface chip didn't get installed.  You can check for the port/driver by looking in the device manager (start > run > devmgmt.msc) in the ports section and/or listed unknown USB devices.  Running Windows Update with the device connected will result in it finding and giving you the option to automatically install the driver for it.
-
-Article explaining much of this: https://lastminuteengineers.com/esp32-ntp-server-date-time-tutorial/
+> :clipboard: **Note:** <br>
+>     You can find more information on configuration on the [configuration wiki page](https://github.com/doubledave/ttgo-ntp-clock/wiki/Configuration)
